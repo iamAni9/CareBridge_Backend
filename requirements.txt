@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+supabase
+python-jose[cryptography]
+passlib
+bcrypt==4.0.1
+groq
+python-dotenv
+pydantic
