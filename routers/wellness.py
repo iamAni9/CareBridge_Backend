@@ -180,6 +180,11 @@ def get_wellness(current_user: dict = Depends(get_current_user)):
             {"relationship": "Daughter", "name": "Yuko Tanaka", "phone": "+81-90-5555-1234"}
         ]
 
+    # Calculate averages (last 7 days)
+    recent_week = history[-7:] if len(history) >= 7 else history
+    steps_average = int(sum(d["steps"] for d in recent_week) / len(recent_week)) if recent_week else 0
+    speaking_average = round(sum(d["speaking_duration_min"] for d in recent_week) / len(recent_week), 1) if recent_week else 0.0
+
     return {
         "care_priority_score": latest_score,
         "recommendation": recommendation,
@@ -190,7 +195,9 @@ def get_wellness(current_user: dict = Depends(get_current_user)):
         "show_high_priority_alert": show_alert,
         "history": history,
         "simulation_mode": SIMULATION_STATE,
-        "family_contacts": family_contacts
+        "family_contacts": family_contacts,
+        "steps_average": steps_average,
+        "speaking_average": speaking_average
     }
 
 @router.post("/simulate")

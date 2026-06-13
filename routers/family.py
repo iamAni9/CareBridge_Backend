@@ -138,6 +138,11 @@ def get_family_dashboard(family: dict = Depends(require_family)):
     else:
         recommendation = "High-priority caregiving recommended"
 
+    # Calculate averages (last 7 days)
+    recent_week = history[-7:] if len(history) >= 7 else history
+    steps_average = int(sum(d["steps"] for d in recent_week) / len(recent_week)) if recent_week else 0
+    speaking_average = round(sum(d["speaking_duration_min"] for d in recent_week) / len(recent_week), 1) if recent_week else 0.0
+
     return {
         "parent_name": parent_name,
         "relationship": relationship,
@@ -148,5 +153,7 @@ def get_family_dashboard(family: dict = Depends(require_family)):
         "alert_active": show_alert,
         "history": history,
         "active_requests": active_requests,
-        "simulation_mode": wellness.SIMULATION_STATE
+        "simulation_mode": wellness.SIMULATION_STATE,
+        "steps_average": steps_average,
+        "speaking_average": speaking_average
     }
